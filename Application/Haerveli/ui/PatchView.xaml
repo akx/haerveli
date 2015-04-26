@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="PatchView"
+             Name="ThisControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:my="clr-namespace:Haerveli"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="GreenTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <GroupBox Header="Patch Properties">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <Grid.Resources>
+                <Style x:Key="{x:Type Label}" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+                    <Setter Property="Width" Value="100"/>
+                </Style>
+            </Grid.Resources>
+            
+            <StackPanel Grid.Row="0">
+                <DockPanel>
+                    <Label>Name</Label>
+                    <TextBox Text="{Binding ElementName=ThisControl, Path=Patch.Name}"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label>Root Operator</Label>
+                    <ComboBox ItemsSource="{Binding ElementName=ThisControl, Path=Patch.Project.Operators}"
+                              SelectedItem="{Binding ElementName=ThisControl, Path=Patch.RootOperator}"
+                              DisplayMemberPath="Name"/>
+                </DockPanel>
+            </StackPanel>
+            
+            <DockPanel Grid.Row="1">
+                <Label VerticalAlignment="Top">Modulations</Label>
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Name="AddButton" Content="Add New" Click="AddButton_Click"/>
+                    </StackPanel>
+                    <ListBox ItemsSource="{Binding ElementName=ThisControl, Path=Patch.Modulations}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Focusable" Value="False"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="ListBoxItem">
+                                <my:ModulationView ViewModel="{Binding}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </DockPanel>
+        </Grid>
+    </GroupBox>
+    
+</UserControl>

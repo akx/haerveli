@@ -1,0 +1,149 @@
+﻿<UserControl x:Class="KeySelectorView"
+             Name="ThisControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:my="clr-namespace:Haerveli"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="400">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="GreenTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- White key style -->
+            <ControlTemplate x:Key="WhiteKeyTemplate" TargetType="{x:Type RadioButton}">
+                <Border Name="ButtonBorder"
+                            BorderBrush="#80082008" Background="#a0d0f0a0"
+                            CornerRadius="2" BorderThickness="1" Margin="0">
+                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#70d040"/>
+                        <Setter TargetName="ButtonBorder" Property="Background" Value="#ffa0c048"/>
+                        <Setter TargetName="ButtonBorder" Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.5" Color="LightYellow"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter TargetName="ButtonBorder" Property="Background" Value="#ffb0ff50"/>
+                    </Trigger>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter TargetName="ButtonBorder" Property="Background" Value="#ffd0ff88"/>
+                        <Setter TargetName="ButtonBorder" Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.5" Color="Yellow"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+            
+            <!-- Black key style -->
+            <ControlTemplate x:Key="BlackKeyTemplate" TargetType="{x:Type RadioButton}">
+                <Border Name="ButtonBorder"
+                            BorderBrush="#80082008" Background="#ff306008"
+                            CornerRadius="2" BorderThickness="1" Margin="0">
+                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#70d040"/>
+                        <Setter TargetName="ButtonBorder" Property="Background" Value="#ffa0c048"/>
+                        <Setter TargetName="ButtonBorder" Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.5" Color="LightYellow"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter TargetName="ButtonBorder" Property="Background" Value="#ffb0ff50"/>
+                    </Trigger>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter TargetName="ButtonBorder" Property="Background" Value="#ffd0ff88"/>
+                        <Setter TargetName="ButtonBorder" Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.5" Color="Yellow"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+            
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <!--<Border BorderBrush="#a070a028" BorderThickness="1">-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Grid.RowSpan="2" Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type RadioButton}">
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="Height" Value="Auto"/>
+                            <Setter Property="Width" Value="36"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <RadioButton Name="CButton" GroupName="KeyGroup" Template="{StaticResource WhiteKeyTemplate}" Click="CButton_Click"/>
+                    <RadioButton Name="DButton" GroupName="KeyGroup" Template="{StaticResource WhiteKeyTemplate}" Click="DButton_Click"/>
+                    <RadioButton Name="EButton" GroupName="KeyGroup" Template="{StaticResource WhiteKeyTemplate}" Click="EButton_Click"/>
+                    <RadioButton Name="FButton" GroupName="KeyGroup" Template="{StaticResource WhiteKeyTemplate}" Click="FButton_Click"/>
+                    <RadioButton Name="GButton" GroupName="KeyGroup" Template="{StaticResource WhiteKeyTemplate}" Click="GButton_Click"/>
+                    <RadioButton Name="AButton" GroupName="KeyGroup" Template="{StaticResource WhiteKeyTemplate}" Click="AButton_Click"/>
+                    <RadioButton Name="BButton" GroupName="KeyGroup" Template="{StaticResource WhiteKeyTemplate}" Click="BButton_Click"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="12,0,0,0">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type RadioButton}">
+                            <Setter Property="Margin" Value="12,0,0,0"/>
+                            <Setter Property="Height" Value="Auto"/>
+                            <Setter Property="Width" Value="24"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <RadioButton Name="CisButton" GroupName="KeyGroup" Template="{StaticResource BlackKeyTemplate}" Click="CisButton_Click"/>
+                    <RadioButton Name="DisButton" GroupName="KeyGroup" Template="{StaticResource BlackKeyTemplate}" Click="DisButton_Click" Margin="12,0,36,0"/>
+                    <RadioButton Name="FisButton" GroupName="KeyGroup" Template="{StaticResource BlackKeyTemplate}" Click="FisButton_Click"/>
+                    <RadioButton Name="GisButton" GroupName="KeyGroup" Template="{StaticResource BlackKeyTemplate}" Click="GisButton_Click"/>
+                    <RadioButton Name="AisButton" GroupName="KeyGroup" Template="{StaticResource BlackKeyTemplate}" Click="AisButton_Click"/>
+                </StackPanel>
+            </Grid>
+            
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Style>
+                        <Style TargetType="{x:Type StackPanel}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=ThisControl, Path=Note.Key}" Value="-1">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <Label Content="Octave" Width="50"/>
+                    <TextBox Text="{Binding ElementName=ThisControl, Path=Note.Octave}" Width="60" FontSize="14"/>
+                    <Button Name="DecreaseButton" Content="-" Width="30" Click="DecreaseButton_Click"/>
+                    <Button Name="IncreaseButton" Content="+" Width="30" Click="IncreaseButton_Click"/>
+                </StackPanel>
+                <RadioButton Name="RestButton" GroupName="KeyGroup" Content="Rest" Click="RestButton_Click" Margin="10,5"/>
+            </StackPanel>
+            
+        </Grid>
+    <!--</Border>-->
+    
+
+</UserControl>

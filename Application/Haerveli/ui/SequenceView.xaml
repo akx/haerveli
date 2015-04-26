@@ -1,0 +1,199 @@
+﻿<UserControl x:Class="SequenceView"
+             Name="ThisControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:my="clr-namespace:Haerveli"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="GreenTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="HorizontalListBoxStyle" TargetType="ListBox">
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="Foreground" Value="#dfb"/>
+                <Setter Property="Background" Value="#2000"/>
+                <Setter Property="BorderBrush" Value="#a070a028"/>
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <my:EnumDescriptionConverter x:Key="EnumConverter"/>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <GroupBox Header="Sequencer">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <Grid.Resources>
+                <Style x:Key="{x:Type Label}" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+                    <Setter Property="Width" Value="100"/>
+                    <Setter Property="VerticalAlignment" Value="Top"/>
+                </Style>
+            </Grid.Resources>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Label Content="BPM"/>
+                    <!--<TextBlock Text="BPM" Width="50"/>-->
+                    <TextBox Text="{Binding ElementName=ThisControl, Path=Project.Bpm}" FontSize="14" Width="60"/>
+                    <Button Name="DecreaseBpmButton" Content="-" Width="30" Margin="2" Click="DecreaseBpmButton_Click"/>
+                    <Button Name="IncreaseBpmButton" Content="+" Width="30" Margin="2" Click="IncreaseBpmButton_Click"/>
+                </StackPanel>
+                <DockPanel Grid.Column="1" HorizontalAlignment="Right">
+                    <TextBlock Text="Length:"/>
+                    <TextBlock Text="{Binding ElementName=ThisControl, Path=ViewModel.SequenceLength}"/>
+                </DockPanel>
+            </Grid>
+            
+            <DockPanel Grid.Row="1">
+                <Label Content="Sequence"/>
+                <ListBox Height="65"
+                         Style="{StaticResource HorizontalListBoxStyle}"
+                         ItemsSource="{Binding ElementName=ThisControl, Path=ViewModel.Notes}"
+                         SelectedItem="{Binding ElementName=ThisControl, Path=SelectedNote}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Name="bd" Margin="3,1,0,1"
+                                                VerticalAlignment="Top"
+                                                Background="Transparent"
+                                                BorderBrush="Green"
+                                                BorderThickness="1"
+                                                CornerRadius="3">
+                                            <ContentPresenter Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="bd" Property="Background" Value="#ffa0c048"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="bd" Property="BorderBrush" Value="#70d040" />
+                                                <Setter TargetName="bd" Property="Effect">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.5" Color="LightYellow"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="3,8">
+                                <StackPanel.Resources>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="FontFamily" Value="Lucida Console"/>
+                                        <Setter Property="FontSize" Value="13"/>
+                                        <Setter Property="FontWeight" Value="DemiBold"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <TextBlock Text="{Binding Path=Key, Converter={StaticResource EnumConverter}}"/>
+                                <TextBlock Text="{Binding Path=Octave}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=Key}" Value="-1">
+                                                    <Setter Property="Visibility" Value="Hidden"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+                
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Name="ShiftLeftButton" Content="&lt;&lt;" Width="30" Click="ShiftLeftButton_Click" Margin="102,2,2,2"/>
+                <Button Name="ShiftRightButton" Content="&gt;&gt;" Width="30" Click="ShiftRightButton_Click" Margin="2"/>
+                <Button Name="AddButton" Content="Add New" Click="AddButton_Click"/>
+                <Button Name="DeleteButton" Content="Delete" Click="DeleteButton_Click"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Row="3">
+                <DockPanel>
+                    <Label Content="Patch"/>
+                    <ComboBox ItemsSource="{Binding ElementName=ThisControl, Path=SelectedNote.AvailablePatches}"
+                              SelectedItem="{Binding ElementName=ThisControl, Path=SelectedNote.Patch}"
+                              DisplayMemberPath="Name"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label Content="Note"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <my:KeySelectorView Height="85" Margin="2" Grid.Column="0"
+                                        Note="{Binding ElementName=ThisControl, Path=SelectedNote}"/>
+                        <StackPanel Grid.Column="1">
+                            <!--<DockPanel>-->
+                                <TextBlock Text="Duration" HorizontalAlignment="Left" FontSize="10"/>
+                                <my:DurationEditorView Margin="2" Note="{Binding ElementName=ThisControl, Path=SelectedNote}" TypeFlag="0"/>
+                            <!--</DockPanel>
+                            <DockPanel>-->
+                                <TextBlock Text="Release Point" HorizontalAlignment="Left" FontSize="10"/>
+                                <my:DurationEditorView Margin="2" Note="{Binding ElementName=ThisControl, Path=SelectedNote}" TypeFlag="1"/>
+                            <!--</DockPanel>-->
+                        </StackPanel>
+                    </Grid>
+                </DockPanel>
+            </StackPanel>
+            
+            <DockPanel Grid.Row="4">
+                <Label Content="Parameters"/>
+                <ListBox ItemsSource="{Binding ElementName=ThisControl, Path=SelectedNote.Parameters}">
+                    <ListBox.Resources>
+                        <Style TargetType="{x:Type Label}" BasedOn="{StaticResource {x:Type Label}}">
+                            <Setter Property="Width" Value="Auto"/>
+                        </Style>
+                    </ListBox.Resources>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Focusable" Value="False"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="ListBoxItem">
+                            <my:ParameterView ViewModel="{Binding}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+            <Button Grid.Row="5" Name="AddParameterButton" Content="Add New" HorizontalAlignment="Right" Click="AddParameterButton_Click"/>
+        </Grid>
+    </GroupBox>
+</UserControl>

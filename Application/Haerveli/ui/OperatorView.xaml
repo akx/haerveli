@@ -1,0 +1,186 @@
+﻿<UserControl x:Class="OperatorView"
+             Name="ThisControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:my="clr-namespace:Haerveli"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="500">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="GreenTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <my:EnumDescriptionConverter x:Key="EnumConverter"/>
+
+            <my:BooleanInverterConverter x:Key="InverterConverter"/>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+            
+        <Grid.Resources>
+            <Style x:Key="{x:Type Label}" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+                <Setter Property="Width" Value="85"/>
+            </Style>
+            <Style x:Key="{x:Type TextBox}" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                <Setter Property="Width" Value="50"/>
+            </Style>
+        </Grid.Resources>
+
+        <GroupBox Grid.Column="0" Grid.Row="0" Header="Oscillator">
+            <GroupBox.Resources>
+                <Style TargetType="{x:Type DockPanel}">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </GroupBox.Resources>
+            <StackPanel>
+                <DockPanel>
+                    <Label Content="Mod. Type"/>
+                    <ComboBox ItemsSource="{Binding ElementName=ThisControl, Path=ViewModel.ModulationTypeValues}"
+                              SelectedItem="{Binding ElementName=ThisControl, Path=ViewModel.ModulatorType}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </DockPanel>
+                
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" Content="Osc. Level"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.OscillatorLevel}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.OscillatorLevel}"
+                            Minimum="0" Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" Content="Osc. Phase"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.OscillatorPhase}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.OscillatorPhase}"
+                            Minimum="0" Maximum="360" TickFrequency="0.1" IsSnapToTickEnabled="True"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+                
+                <CheckBox Name="KeyFollowCheckBox" Content="Key Follow" IsChecked="{Binding ElementName=ThisControl, Path=ViewModel.KeyFollow}"/>
+                <DockPanel IsEnabled="{Binding ElementName=KeyFollowCheckBox, Path=IsChecked, Converter={StaticResource InverterConverter}}">
+                    <Label DockPanel.Dock="Left" Content="Osc. Freq."/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.OscillatorFrequency}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.OscillatorFrequency}"
+                            Minimum="0" Maximum="20000" TickFrequency="0.1" IsSnapToTickEnabled="True"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel">
+                    </Slider>
+                </DockPanel>
+                <DockPanel IsEnabled="{Binding ElementName=KeyFollowCheckBox, Path=IsChecked}">
+                    <Label DockPanel.Dock="Left" Content="Key Offset"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.KeyOffset}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.KeyOffset}"
+                            Minimum="-11" Maximum="11"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+                <DockPanel IsEnabled="{Binding ElementName=KeyFollowCheckBox, Path=IsChecked}">
+                    <Label DockPanel.Dock="Left" Content="Oct. Offset"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.OctaveOffset}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.OctaveOffset}"
+                            Minimum="-10" Maximum="10"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+            </StackPanel>
+        </GroupBox>
+            
+        <GroupBox Grid.Column="0" Grid.Row="1" Header="Panorama">
+            <StackPanel>
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" Content="Offset"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.PanningOffset}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.PanningOffset}"
+                            Minimum="-1" Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" Content="Osc. Freq."/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.PanningFrequency}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.PanningFrequency}"
+                            Minimum="0" Maximum="200" TickFrequency="0.1" IsSnapToTickEnabled="True"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" Content="Osc. Level"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.PanningLevel}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.PanningLevel}"
+                            Minimum="0" Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Grid.Column="1" Grid.Row="0" Header="Amp Envelope">
+            <my:EnvelopeView ViewModel="{Binding ElementName=ThisControl, Path=ViewModel.AmpEnvelope}"/>
+        </GroupBox>
+            
+        <GroupBox Grid.Column="1" Grid.Row="1" Header="Pitch Envelope">
+            <my:EnvelopeView ViewModel="{Binding ElementName=ThisControl, Path=ViewModel.PitchEnvelope}"/>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2" Grid.Column="0" Header="Effect">
+            <StackPanel>
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" Content="Sharpness"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.Sharpness}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.Sharpness}"
+                            Minimum="0" Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" Content="Noise"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.NoiseLevel}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.NoiseLevel}"
+                            Minimum="0" Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" Content="Shape"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.Distortion}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.Distortion}"
+                            Minimum="0" Maximum="2" TickFrequency="0.01" IsSnapToTickEnabled="True"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" Content="Resolution"/>
+                    <TextBox DockPanel.Dock="Right" Text="{Binding ElementName=ThisControl, Path=ViewModel.Resolution}"/>
+                    <Slider Value="{Binding ElementName=ThisControl, Path=ViewModel.Resolution}"
+                            Minimum="0" Maximum="16"
+                            PreviewMouseWheel="Slider_PreviewMouseWheel"/>
+                </DockPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2" Grid.Column="1" Header="General Properties">
+            <StackPanel>
+                <DockPanel>
+                    <Label Content="Name"/>
+                    <TextBox Text="{Binding ElementName=ThisControl, Path=ViewModel.Name}" Width="Auto"/>
+                </DockPanel>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+
+
+</UserControl>
